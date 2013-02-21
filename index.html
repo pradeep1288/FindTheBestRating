@@ -8,8 +8,12 @@
    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
    <script src="bootstrap.min.js"></script>
    <script type="text/javascript">
+         google.load("visualization", "1", {packages:["corechart"]});
+
           var amazon_data = "";
           var cnet_data = "";
+          var amazon_chart_data = [["", 0],["1star", ],["2star", ],["3star", ],["4star",], ["5star", ]];
+          var cnet_chart_data = [["", 0],["1star", ],["2star", ],["3star", ],["4star", ], ["5star", ]];
 
 
    $(document).ready(
@@ -21,19 +25,44 @@
   
    function drawChart(review_site, data)
    {
-
-   }
+        var i = 0;
+        if (review_site == "amazon")
+        {
+            for(i=0;i<5;i++)
+            {
+                amazon_chart_data[i+1][1] = parseInt(amazon_data[i]);
+            }
+            var options = {title: 'Amazon Reviews'};
+            var chart_data = google.visualization.arrayToDataTable(amazon_chart_data);
+            var chart = new google.visualization.PieChart(document.getElementById('amazon_chart_div'));
+            chart.draw(chart_data, options);
+        }
+        if (review_site == "cnet")
+        {
+            for(i=0;i<5;i++)
+            {
+                cnet_chart_data[i+1][1] = parseInt(cnet_data[i]);
+                console.log(cnet_chart_data);
+            }
+            var options = {title: 'CNET Reviews'};
+            var chart_data = google.visualization.arrayToDataTable(cnet_chart_data);
+            var chart = new google.visualization.PieChart(document.getElementById('cnet_chart_div'));
+            chart.draw(chart_data, options);
+        }
+        
+      }
+   
    function getmyJSON(review_site, product)
    {
        $.ajax({
-        url: review_site,
+        url: review_site+'.json',
         async: false,
         dataType: 'json',
         success: function(data) {
             $.each(data, function(key, val) {
-                if (product == key && review_site == "amazon.json")
+                if (product == key && review_site == "amazon")
                     amazon_data = val;
-                if (product == key && review_site == "cnet.json")
+                if (product == key && review_site == "cnet")
                     cnet_data = val;
             });
         }
@@ -48,10 +77,11 @@
             return false;
         }
         else {
-            getmyJSON("amazon.json",searchText);
-            getmyJSON("cnet.json", searchText);
-            console.log(amazon_data);
-            console.log(cnet_data);
+            getmyJSON("amazon",searchText);
+            getmyJSON("cnet", searchText);
+            drawChart("amazon", amazon_data);
+            drawChart("cnet", cnet_data);
+
         }
     }
    </script>
@@ -75,7 +105,9 @@
             </div> 
         </div>
     </div>  
-    
+    <div id="amazon_chart_div" style="width: 900px; height: 500px;"></div>
+    <div id="cnet_chart_div" style="width: 900px; height: 500px;"></div>
+
     <div id = "results">
         <div class = "container">
         <br/><br/>
