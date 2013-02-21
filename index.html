@@ -14,11 +14,12 @@
           var cnet_data = "";
           var amazon_chart_data = [["", 0],["1star", ],["2star", ],["3star", ],["4star",], ["5star", ]];
           var cnet_chart_data = [["", 0],["1star", ],["2star", ],["3star", ],["4star", ], ["5star", ]];
-
+          var iphone5_video = '<iframe width="560" height="315" src="http://www.youtube.com/embed/UXMyJe-suHs" frameborder="0" allowfullscreen></iframe>'
+          var nexus4_video = '<iframe width="560" height="315" src="http://www.youtube.com/embed/herJmqIGOoM" frameborder="0" allowfullscreen></iframe>'
 
    $(document).ready(
         function() {
-            $('#results').hide();
+            $('#video').hide();
         }      
     );
    
@@ -81,41 +82,61 @@
             getmyJSON("cnet", searchText);
             drawChart("amazon", amazon_data);
             drawChart("cnet", cnet_data);
-
+            if (searchText == "nexus4")
+            {
+                $('#video').append(nexus4_video);
+                $('#video').show();
+            }
+            else 
+            {
+                $('#video').append(iphone5_video);
+                $('#video').show();
+            }
         }
     }
    </script>
 </head>
 <body>
-    <div class ="navbar navbar-inverse navbar-fixed-top">
-        <div class = "navbar-inner">
-            <div class = "container">
-                <a class ="brand" href="#">Trojan Movie Search</a>
-            </div>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">FindTheBestRating</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
         </div>
+      </div>
     </div>
     <div id = "mainPage">
         <div class="container">
             <div class ="hero-unit">
-                    Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type ="text" width = "400px" name ="title" id ="title">
+                    Smartphone:&nbsp;&nbsp;<input type ="text" width = "400px" name ="title" id ="title">
                     <br/>
                     <br/>
-                    <br/><br/>
                     <button type="button" class="btn btn-primary" onclick="validate();">Search</button>
-            </div> 
+            </div>
+    <div class = "row show-grid">
+        <div class = "span6" >
+            <div id="amazon_chart_div" style="width: 600px; height: 300px;"></div>
         </div>
+        <div class = "span5" >
+            <div id="cnet_chart_div" style="width: 600px; height: 300px;"></div>
+        </div> 
+    </div>
+    <div class = "row show-grid">
+        <div id = "video" class = "span6 offset1"> 
+            <h4>Mobile Video Review</h4>
+        </div>
+    </div>
+    </div>
     </div>  
-    <div id="amazon_chart_div" style="width: 900px; height: 500px;"></div>
-    <div id="cnet_chart_div" style="width: 900px; height: 500px;"></div>
-
-    <div id = "results">
-        <div class = "container">
-        <br/><br/>
-        <h3>Results:</h3>
-        <table class="table table-bordered" align ="center" id ="resultsTable">
-        
-        </table>
-    </div>
-    </div>
 </body>
 </html>
