@@ -70,25 +70,31 @@
         });  
    }
    
-   function validate () {
+   function validate () 
+   {
         var searchText = document.getElementById('title').value;
         if (!searchText)
         {
             alert("Looks like you forgot to enter the search text");
             return false;
         }
-        else {
+        else 
+        {
             getmyJSON("amazon",searchText);
             getmyJSON("cnet", searchText);
             drawChart("amazon", amazon_data);
             drawChart("cnet", cnet_data);
             if (searchText == "nexus4")
             {
+                $('#video').empty();
+                $('#video').append('<h4 id = "video_title">Mobile Video Review</h4>');
                 $('#video').append(nexus4_video);
-                $('#video').show();
+
             }
             else 
             {
+                $('#video').empty();
+                $('#video').append('<h4 id = "video_title">Mobile Video Review</h4>');
                 $('#video').append(iphone5_video);
                 $('#video').show();
             }
@@ -118,10 +124,12 @@
     <div id = "mainPage">
         <div class="container">
             <div class ="hero-unit">
+                <form action="javascript:validate();">
                     Smartphone:&nbsp;&nbsp;<input type ="text" width = "400px" name ="title" id ="title">
                     <br/>
                     <br/>
-                    <button type="button" class="btn btn-primary" onclick="validate();">Search</button>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
             </div>
     <div class = "row show-grid">
         <div class = "span6" >
@@ -133,7 +141,6 @@
     </div>
     <div class = "row show-grid">
         <div id = "video" class = "span6 offset1"> 
-            <h4>Mobile Video Review</h4>
         </div>
     </div>
     </div>
