@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<title>FindTheRating</title>
+<head>
+   <link href="bootstrap.min.css" rel="stylesheet">
+   <script src ="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   <script src="bootstrap.min.js"></script>
+   <script type="text/javascript">
+   $(document).ready(
+        function() {
+            $('#results').hide();
+        }      
+    );
+   
+  
+   function drawChart(review_site, data)
+   {
+
+   }
+   function getmyJSON(product)
+   {
+       var amazon_url = "http://cs-server.usc.edu:33613/homework8/ImdbFetch?title=";
+       $.getJSON(amazon_url,
+        function(data) {
+            if (data.results.result.length > 0)
+            {
+                $('#resultsTable').empty();
+                $('#resultsTable').append("<tr><th>Image</th><th>Title</th><th>Year</th><th>Director</th><th>Rating</th><th>Link to title</th><th>Post to facebook</th></tr>");
+                $.each(data.results.result, function (i, item) {
+                    var caption  = 'I am interested in this movie/game/series';
+                    var desc  = item.title + ' was released in ' + item.year + ' and has ' + item.rating + ' ratings.';
+                    var properties = '{&quot;Look at the user reviews&quot;:{text:&quot;here&quot;,href:&quot;' + item.detail + '/reviews&quot;}}';
+                    var fb_link = 'https://facebook.com/dialog/feed?app_id=371874779563583&link=' + item.detail + '&picture='+item.cover+'&name='+item.title +'&caption=' +caption+ '&description=' + desc+'&properties='+properties+'&redirect_uri=http://cs-server.usc.edu:33612/close.html';
+                    var line = '<tr><td><img src="'+item.cover +'" />' + '<td>'+ item.title+'</td>' + '<td>' +item.year +'</td>' +'<td>' + item.directors + '</td>' + '<td>' + item.rating + '</td>' + '<td><a href = "' + item.detail + '">details</a></td><td>';
+                    line = line + '<a href="javascript:fbPopup(\''+ fb_link + '\');"><img src="facebook_logo.jpg" width ="120px"/></a></td></tr>';
+                    $('#resultsTable').append(line);
+                });
+                $('#resultsTable').append("</table>");
+                $('#results').show();
+            }
+            else 
+            {   
+                $('#resultsTable').empty();
+                $('#resultsTable').append("<br/><br/><h3> No results... </h3>");
+                $('#results').show();
+            }
+           
+       });
+   }
+   
+   function validate (form) {
+        var searchText = document.getElementById('title').value;
+        if (!searchText)
+        {
+            alert("Looks like you forgot to enter the search text");
+            return false;
+        }
+        else {
+            getmyJSON();
+        }
+    }
+   </script>
+</head>
+<body>
+    <div class ="navbar navbar-inverse navbar-fixed-top">
+        <div class = "navbar-inner">
+            <div class = "container">
+                <a class ="brand" href="#">Trojan Movie Search</a>
+            </div>
+        </div>
+    </div>
+    <div id = "mainPage">
+        <div class="container">
+            <div class ="hero-unit">
+                <form id="imdb_search" name="imdb_search" action="javascript:void(0);" method="GET" onsubmit="validate(this);">
+                    Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type ="text" width = "400px" name ="title" id ="title">
+                    <br/>
+                    <br/>
+                    Media Type: <select name="title_type" class = "title_type">
+                    <option value="feature,tv_series,game">All Types</option>
+                    <option value="feature">Feature Film</option>
+                    <option value="tv_series">TV Series</option>
+                    <option value="game">Video Game</option>
+                    </select>
+                    <br/><br/>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form> 
+            </div> 
+        </div>
+    </div>  
+    
+    <div id = "results">
+        <div class = "container">
+        <br/><br/>
+        <h3>Results:</h3>
+        <table class="table table-bordered" align ="center" id ="resultsTable">
+        
+        </table>
+    </div>
+    </div>
+</body>
+</html>

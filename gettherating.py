@@ -49,8 +49,6 @@ def get_rating_from_cnet(url, product):
         print e
 
 
-
-
 get_rating_from_amazon(url_amazon_iphone5, "iphone5")
 get_rating_from_amazon(url_amazon_nexus4, "nexus4")
 get_rating_from_cnet(url_cnet_iphone5, "iphone5")
