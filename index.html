@@ -8,6 +8,10 @@
    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
    <script src="bootstrap.min.js"></script>
    <script type="text/javascript">
+          var amazon_data = "";
+          var cnet_data = "";
+
+
    $(document).ready(
         function() {
             $('#results').hide();
@@ -19,38 +23,24 @@
    {
 
    }
-   function getmyJSON(product)
+   function getmyJSON(review_site, product)
    {
-       var amazon_url = "http://cs-server.usc.edu:33613/homework8/ImdbFetch?title=";
-       $.getJSON(amazon_url,
-        function(data) {
-            if (data.results.result.length > 0)
-            {
-                $('#resultsTable').empty();
-                $('#resultsTable').append("<tr><th>Image</th><th>Title</th><th>Year</th><th>Director</th><th>Rating</th><th>Link to title</th><th>Post to facebook</th></tr>");
-                $.each(data.results.result, function (i, item) {
-                    var caption  = 'I am interested in this movie/game/series';
-                    var desc  = item.title + ' was released in ' + item.year + ' and has ' + item.rating + ' ratings.';
-                    var properties = '{&quot;Look at the user reviews&quot;:{text:&quot;here&quot;,href:&quot;' + item.detail + '/reviews&quot;}}';
-                    var fb_link = 'https://facebook.com/dialog/feed?app_id=371874779563583&link=' + item.detail + '&picture='+item.cover+'&name='+item.title +'&caption=' +caption+ '&description=' + desc+'&properties='+properties+'&redirect_uri=http://cs-server.usc.edu:33612/close.html';
-                    var line = '<tr><td><img src="'+item.cover +'" />' + '<td>'+ item.title+'</td>' + '<td>' +item.year +'</td>' +'<td>' + item.directors + '</td>' + '<td>' + item.rating + '</td>' + '<td><a href = "' + item.detail + '">details</a></td><td>';
-                    line = line + '<a href="javascript:fbPopup(\''+ fb_link + '\');"><img src="facebook_logo.jpg" width ="120px"/></a></td></tr>';
-                    $('#resultsTable').append(line);
-                });
-                $('#resultsTable').append("</table>");
-                $('#results').show();
-            }
-            else 
-            {   
-                $('#resultsTable').empty();
-                $('#resultsTable').append("<br/><br/><h3> No results... </h3>");
-                $('#results').show();
-            }
-           
-       });
+       $.ajax({
+        url: review_site,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            $.each(data, function(key, val) {
+                if (product == key && review_site == "amazon.json")
+                    amazon_data = val;
+                if (product == key && review_site == "cnet.json")
+                    cnet_data = val;
+            });
+        }
+        });  
    }
    
-   function validate (form) {
+   function validate () {
         var searchText = document.getElementById('title').value;
         if (!searchText)
         {
@@ -58,7 +48,10 @@
             return false;
         }
         else {
-            getmyJSON();
+            getmyJSON("amazon.json",searchText);
+            getmyJSON("cnet.json", searchText);
+            console.log(amazon_data);
+            console.log(cnet_data);
         }
     }
    </script>
@@ -74,19 +67,11 @@
     <div id = "mainPage">
         <div class="container">
             <div class ="hero-unit">
-                <form id="imdb_search" name="imdb_search" action="javascript:void(0);" method="GET" onsubmit="validate(this);">
                     Title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type ="text" width = "400px" name ="title" id ="title">
                     <br/>
                     <br/>
-                    Media Type: <select name="title_type" class = "title_type">
-                    <option value="feature,tv_series,game">All Types</option>
-                    <option value="feature">Feature Film</option>
-                    <option value="tv_series">TV Series</option>
-                    <option value="game">Video Game</option>
-                    </select>
                     <br/><br/>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form> 
+                    <button type="button" class="btn btn-primary" onclick="validate();">Search</button>
             </div> 
         </div>
     </div>  
